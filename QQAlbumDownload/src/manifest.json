@@ -1,0 +1,35 @@
+{
+	"name"              : "QQ相册下载",
+	"version"           : "0.1",
+	"manifest_version"  : 2,
+	"description"       : "一键下载QQ相册里的全部图片。",
+
+	"icons": {
+		"16" : "icon16.png",
+		"48" : "icon48.png",
+		"128": "icon128.png"
+	},
+
+	"permissions": [
+        "downloads"
+	],
+
+	"background": {
+		"scripts": [ "background.js" ]
+	},
+
+    "content_scripts": [{
+        "matches"    : [ "http://user.qzone.qq.com/*" ],
+        "run_at"     : "document_end",
+        "js"         : [ "content.js" ],
+        "all_frames" : true
+    }],
+
+	"web_accessible_resources": [
+		"page.js"
+	],
+
+	"externally_connectable": {
+		"matches": ["http://user.qzone.qq.com/*"]
+	}
+}

@@ -1,0 +1,16 @@
+{
+    "name"        : "Google 直通车",
+    "version"     : "1.0",
+    "manifest_version": 2,
+    "description" : "Google 直通车可以把 Google 搜索结果列表里的网页转发链接替换为直接链接。",
+
+    "icons"       : { "48" : "icon48.png",
+                      "128": "icon128.png"
+                    },
+
+    "content_scripts": [{
+                            "matches"    : [ "http://www.google.com.hk/*", "https://www.google.com.hk/*", "http://www.google.com/*", "https://www.google.com/*" ],
+                            "js"         : [ "inject.js" ],
+                            "all_frames" : true
+                        }]
+}
