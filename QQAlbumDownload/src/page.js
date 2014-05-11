@@ -1,6 +1,6 @@
 // http://developer.chrome.com/extensions/devguide.html
 
-seajs.use(['jquery'], function($) {
+seajs.use(['jquery', 'photo.v7/common/api/photoApi/photoApi'], function($, photoApi) {
 	// 本程序的扩展程序标识
 	var DownloadAlbumExtId = document.body.getAttribute('DownloadAlbumExtId');
 
@@ -12,54 +12,25 @@ seajs.use(['jquery'], function($) {
 	}
 	if (!hostUin) return;
 
-	// 用于计算 g_tk
-	// 此代码来自 http://cnc.qzonestyle.gtimg.cn/qzone/v8/engine/migrate-plugin.js
-	var getACSRFToken = function(url) {
-		url = QZFL.util.URI(url);
-		var skey;
-		if (url) if (url.host && url.host.indexOf("qzone.qq.com") > 0) skey = QZFL.cookie.get("p_skey");
-		else if (url.host && url.host.indexOf("qq.com") > 0) skey = QZFL.cookie.get("skey");
-		if (!skey) skey = QZFL.cookie.get("skey") || QZFL.cookie.get("rv2") || "";
-		var hash = 5381;
-		for (var i = 0, len = skey.length; i < len; ++i) hash += (hash << 5) + skey.charCodeAt(i);
-		return hash & 2147483647
-	};
-
 	// 下载指定相册中的全部图片
-	var downloadAll = function(albumId) {
+	var downloadAlbum = function(albumId) {
 		// 先获取相册中的图片数量
-		var params = {
-			pageStart	: 0,
-			pageNum		: 1,
-			inCharset	: 'utf-8',
-			outCharset	: 'utf-8',
-			outstyle	: 'json',
-			format		: 'json',
-			hostUin		: hostUin,
-			topicId		: albumId,
-			g_tk		: getACSRFToken()
+		var options = {
+			hostUin: hostUin,
+			albumId: albumId,
+			pageStart: 0,
+			pageNum: 1
 		};
+		photoApi.photoList.getPhotoList(options).then(function(album) {
+			if (!confirm('导出当前相册中的全部 ' + album.totalInAlbum + ' 个图片？')) return;
+			if (album.totalInAlbum < 1) return;
 
-		$.ajax({
-			url: 'http://user.qzone.qq.com/p/shplist.photo/fcgi-bin/cgi_list_photo',
-			data: params,
-			dataType: 'json',
-			success: function(result) {
-				if (!confirm('导出当前相册中的全部 ' + result.data.totalInAlbum + ' 个图片？')) return;
-				if (result.data.totalInAlbum < 1) return;
-
-				// 获取相册中所有图片的信息
-				params.pageNum = result.data.totalInAlbum;
-				$.ajax({
-					url: 'http://user.qzone.qq.com/p/shplist.photo/fcgi-bin/cgi_list_photo',
-					data: params,
-					dataType: 'json',
-					success: function(result) {
-						// 把相册信息发送给 background.js 进行下载
-						chrome.runtime.sendMessage(DownloadAlbumExtId, {album:result}, function(resp) {});
-					}
-				});
-			}
+			// 获取相册中所有图片的信息
+			options.pageNum = album.totalInAlbum;
+			photoApi.photoList.getPhotoList(options).then(function(album) {
+				// 把相册信息发送给 background.js 进行下载
+				chrome.runtime.sendMessage(DownloadAlbumExtId, {album:album}, function(resp) {});
+			});
 		});
 	};
 
@@ -79,10 +50,11 @@ seajs.use(['jquery'], function($) {
 		if (albumId) {
 			// 创建导出按钮
 			var btn = $('.btn-download-all');
-			if (btn.length == 0) {
-				btn = $('<button class="btn-download-all">导出整个相册</button>').insertAfter($('.head-nav-menu a[title=相册]'));
+			if (btn.attr('data-album-id') != albumId) {
+				btn.remove();
+				btn = $('<button class="btn-download-all" data-album-id="' + albumId + '">导出整个相册</button>').insertAfter($('.head-nav-menu a[title=相册]'));
 				btn.on('click', function() {
-					downloadAll(albumId);
+					downloadAlbum(albumId);
 					return false;
 				});
 			}

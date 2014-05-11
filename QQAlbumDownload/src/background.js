@@ -2,8 +2,8 @@
 
 chrome.runtime.onMessageExternal.addListener(function(request, sender, sendResponse) {
 	if (request.album) {
-		var list = request.album.data.photoList;
-		var name = request.album.data.topic.name.replace(/[\\\/\:\*\?\"\<\>\|]/g , '_');
+		var list = request.album.photoList;
+		var name = request.album.topic.name.replace(/[\\\/\:\*\?\"\<\>\|]/g , '_');
 		for (var i=0; i < list.length; i++) {
 			chrome.downloads.download({
 				url				: list[i].url,
