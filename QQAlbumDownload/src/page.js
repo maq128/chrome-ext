@@ -41,7 +41,7 @@ seajs.use(['jquery', 'photo.v7/common/api/photoApi/photoApi'], function($, photo
 		var iframe = $('#tphoto').get(0);
 		if (iframe) {
 			// http://cnc.qzs.qq.com/qzone/photo/v7/page/photo.html?init=photo.v7/module/photoList2/index&navBar=1&normal=1&aid=V11XzKIl3SCN2v
-			var m = /http:\/\/cnc\.qzs\.qq\.com\/qzone\/photo\/v7\/page\/photo\.html.*aid=([^&]*)/ .exec(iframe.contentWindow.location.href);
+			var m = /http:\/\/\w+\.qzs\.qq\.com\/qzone\/photo\/v7\/page\/photo\.html.*aid=([^&]*)/ .exec(iframe.contentWindow.location.href);
 			if (m && m[1]) {
 				albumId = m[1];
 			}
