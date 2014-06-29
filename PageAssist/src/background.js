@@ -36,7 +36,7 @@ function onClickHandler(info, tab) {
 
     } else if ( info.menuItemId == 'usingIciba' ) {
         chrome.tabs.create({
-            url: 'http://www.iciba.com/' + info.selectionText,
+            url: 'http://www.iciba.com/' + info.selectionText.toLowerCase(),
             selected: true
         });
     }

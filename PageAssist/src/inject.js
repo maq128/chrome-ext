@@ -65,7 +65,7 @@
 		// 显示浮动窗格
 		var showIcibaDiv = function(x, y) {
 			var sel = window.getSelection();
-			var word = sel.toString();
+			var word = sel.toString().toLowerCase();
 
 			// 如果当前有选中文字，则要求右键长按的位置在选择区内，否则清除选择内容
 			if (word.length > 0) {
@@ -85,7 +85,7 @@
 					sel.modify("extend", 'forward', "character");
 				} while (!sel.toString().match(/[^\w\u4e00-\u9fff]/));
 				sel.modify("extend", 'backward', "character");
-				word = sel.toString();
+				word = sel.toString().toLowerCase();
 			}
 
 			var icibaDiv = document.getElementById('iciba_div');
