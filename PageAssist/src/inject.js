@@ -62,8 +62,76 @@
 
 	// 鼠标右键长按
 	var holdWithRightButton = function() {
-		var showIframe = function(pageX, pageY) {
-console.log('showIframe:', pageX, pageY);
+		// 显示浮动窗格
+		var showIcibaDiv = function(x, y) {
+			var sel = window.getSelection();
+			var word = sel.toString();
+
+			// 如果当前有选中文字，则要求右键长按的位置在选择区内，否则清除选择内容
+			if (word.length > 0) {
+				var range = sel.getRangeAt(0);
+				var rc = range.getBoundingClientRect();
+				if (x < rc.left || x >= rc.left + rc.width || y < rc.top || y >= rc.top + rc.height) {
+					word = '';
+				}
+			}
+
+			// 若尚无选择内容，则根据鼠标当前位置选择一个 word
+			if (word.length == 0) {
+				sel.removeAllRanges();
+				sel.addRange(document.caretRangeFromPoint(x - window.scrollX, y - window.scrollY));
+				sel.modify("move", 'backward', "word");
+				do {
+					sel.modify("extend", 'forward', "character");
+				} while (!sel.toString().match(/[^\w\u4e00-\u9fff]/));
+				sel.modify("extend", 'backward', "character");
+				word = sel.toString();
+			}
+
+			var icibaDiv = document.getElementById('iciba_div');
+			if (icibaDiv == null) {
+				// 如尚未创建 icibaDiv，则生成相应内容
+				var css = document.createElement('link');
+				css.rel = 'stylesheet';
+				css.type = 'text/css';
+				css.href = 'http://open.iciba.com/huaci/mini.css';
+				document.body.appendChild(css);
+
+				icibaDiv = document.createElement('div');
+				icibaDiv.id = 'iciba_div';
+				icibaDiv.style.position = 'absolute';
+				icibaDiv.style.width = '300px';
+				document.body.appendChild(icibaDiv);
+
+				// 鼠标点击在外面是隐藏掉 icibaDiv
+				document.body.addEventListener('click', function(evt) {
+					var inMe = false;
+					var target = evt.target;
+					while (target) {
+						if (target == icibaDiv) {
+							inMe = true;
+							break;
+						}
+						target = target.parentElement;
+					}
+					if (!inMe) {
+						icibaDiv.style.display = 'none';
+					}
+				});
+			}
+
+			// 显示 icibaDiv
+			var range = sel.getRangeAt(0);
+			var rc = range.getBoundingClientRect();
+			icibaDiv.innerHTML = '<div id="icIBahyI-main_cont">正在查找“' + word + '”……</div><div id="loading" style="display:none">loading...</div>';
+			icibaDiv.style.left = Math.floor(rc.left + rc.width / 3 + window.scrollX) + 'px';
+			icibaDiv.style.top = (rc.top + rc.height + window.scrollY + 2) + 'px';
+			icibaDiv.style.display = 'block';
+
+			// 发送查询请求
+			var sc = document.createElement('script');
+			sc.src = 'http://open.iciba.com/huaci/dict.php?word=' + encodeURIComponent(word) + '&t=' + new Date().getTime();
+			document.body.appendChild(sc);
 		};
 
 		var holding = {
@@ -84,7 +152,7 @@ console.log('showIframe:', pageX, pageY);
 			holding.timer = setTimeout(function() {
 				holding.timer = null;
 				holding.fired = true;
-				showIframe(holding.startX, holding.startY);
+				showIcibaDiv(holding.startX, holding.startY);
 			}, 500);
 			holding.fired = false;
 		});
