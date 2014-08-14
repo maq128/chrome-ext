@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK" />
+<title>字幕编辑器</title>
+<style type="text/css">
+body {
+	margin: 0px;
+	overflow: hidden;
+}
+#stage {
+	position: relative;
+	overflow: hidden;
+	height: 50%;
+}
+#player {
+	width: 100%;
+	height: 400px;
+	background-image: -webkit-gradient(linear, left top, right top, from(blue), to(green));
+}
+#slide {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	font-family: 微软雅黑;
+	font-weight: bold;
+	font-size: 1em;
+	line-height: 1.8em;
+	background-color: transparent;
+	text-align: center;
+
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(2,2,2, 0)), to(rgba(2,2,2, 0)), color-stop(0.3, rgba(2,2,2, 1)), color-stop(0.7, rgba(2,2,2, 1))) 0 150px no-repeat;
+	-webkit-background-size: 100% 200px;
+	color: rgba(255, 255, 255, 0.1);
+	--webkit-background-clip: text;
+}
+#slide div {
+	transition: color 1s;
+	color: white;
+	-text-shadow: -2px -2px 1px #000000, 2px 2px 1px #000000, -2px 2px 1px #000000, 2px -2px 1px #000000;
+	letter-spacing: 2px;
+}
+#slide div.current-line {
+	color: yellow;
+	text-shadow: -2px -2px 1px red, 2px 2px 1px red, -2px 2px 1px red, 2px -2px 1px red;
+}
+
+#toolbar {
+	width: 100%;
+	padding: 10px;
+	background-color: #dfdfe0;
+	border-bottom: 1px solid #aaaaab;
+}
+</style>
+</head>
+<body>
+
+<div id="toolbar">
+	<input id="btn-load-video" type="file" accept="video/*"/>
+</div>
+<div id="stage">
+	<video id="player" controls autoplay></video>
+	<div id="slide">
+<div>标题：黄金投资的四大陷阱</div>
+<div>宗旨：好玩，好懂，好用</div>
+<div>讲者角色：以厚道、幽默的心态，给好朋友讲金融</div>
+<div>----</div>
+<div>【故事】</div>
+<div class="current-line">大家好 欢迎来到胡说金融</div>
+<div>大妈这个词儿  火了  火到什么程度呢</div>
+<div>连老外都知道了  它已经被牛津英语词典</div>
+<div>列入有待收录的考察名单</div>
+<div>说起中国大妈  你可能会想到广场舞</div>
+<div>她们已经跳出了中国  跳向了世界</div>
+<div>从北京跳到了巴黎  卢浮宫前  中国大妈  翩翩起舞</div>
+<div>那是什么景象  人有蒙娜丽莎  我有中国大妈</div>
+<div>其实  大妈这个词  火起来的原因</div>
+<div>不是因为广场舞  那是为什么</div>
+<div>是因为去年  中国大妈气吞山河</div>
+<div>干了一件让人瞠目结舌的事</div>
+<div>这事儿发生在黄金投资市场上</div>
+<div>先说说背景啊  进入本世纪以来</div>
+<div>黄金价格一路上涨  到了2012年 黄金价格</div>
+<div>在1700美元一盎司上下盘整了一年</div>
+<div>2013一开年  黄金价格就一路走低</div>
+<div>最惨烈的时候  一天下跌20%</div>
+<div>当时  全世界的投资者们都屏住呼吸</div>
+<div>紧张地盯着价格  做空容易做多难</div>
+<div>谁也不敢轻易出手买入</div>
+	</div>
+</div>
+
+<script src="jquery-1.11.1.js"></script>
+<script>
+// http://api.jquery.com/
+// 播放视频 http://www.w3schools.com/tags/ref_av_dom.asp
+// 文字效果 http://www.1stwebdesigner.com/css/css3-text-effects-typography/
+// http://enjoycss.com/
+// http://www.colorzilla.com/gradient-editor/
+$(function() {
+	// 控制镜像翻转
+	$('#btn-load-video').on('change', function(evt) {
+		var file = evt.target.files[0];
+		var type = file.type;
+		var videoNode = $('#player').get(0);
+		var canPlay = videoNode.canPlayType(type);
+//		if (!videoNode.canPlayType(type)) {
+//			alert('无法播放选中的文件');
+//			return;
+//		}
+		var fileURL = URL.createObjectURL(file);
+		videoNode.src = fileURL;
+	});
+});
+</script>
+</body>
+</html>
