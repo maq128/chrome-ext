@@ -1,22 +1,27 @@
 // https://developer.chrome.com/apps/about_apps
 // http://api.jquery.com/
 // http://www.w3.org/TR/FileAPI/
+// http://dev.w3.org/2009/dap/file-system/file-writer.html
 // 播放视频 http://www.w3schools.com/tags/ref_av_dom.asp
 // 文字效果 http://www.1stwebdesigner.com/css/css3-text-effects-typography/
 // http://enjoycss.com/
 // http://www.colorzilla.com/gradient-editor/
 
+var player = null;
+
 function onReady()
 {
+	player = $('#player').get(0);
+
 	// 打开视频文件
 	$('#btn-load-video').on('click', function() {
 		chrome.fileSystem.chooseEntry({
 			type: 'openFile',
-			accepts: [{description:'视频文件 (*.mp4, *.flv, *.mts)', extensions:['mp4', 'flv', 'mts']}]
-		}, function(entry, fileEntries) {
+			accepts: [{description:'音视频文件 (*.mp4, *.mp3)', extensions:['mp4', 'mp3']}]
+		}, function(entry) {
 			chrome.fileSystem.getDisplayPath(entry, function(displayPath) {
 				entry.file(function(file) {
-					$('#player').get(0).src = URL.createObjectURL(file);
+					player.src = URL.createObjectURL(file);
 				});
 			});
 		});
@@ -27,7 +32,7 @@ function onReady()
 		chrome.fileSystem.chooseEntry({
 			type: 'openFile',
 			accepts: [{description:'文本文件 (*.txt)', extensions:['txt']}]
-		}, function(entry, fileEntries) {
+		}, function(entry) {
 			entry.file(function(file) {
 				var reader = new FileReader();
 				reader.onerror = function(e) {
@@ -41,14 +46,45 @@ function onReady()
 		});
 	});
 
+	// 保存字幕文件
+	$('#btn-save-srt').on('click', function() {
+		chrome.fileSystem.chooseEntry({
+			type: 'saveFile',
+			suggestedName: 'subtitles.srt',
+			accepts: [{description:'字幕文件 (*.srt)', extensions:['srt']}]
+		}, function(entry) {
+			console.log(arguments);
+			entry.createWriter(function(fileWriter) {
+				fileWriter.onwriteend = function(e) {
+					console.log('Write completed.');
+				};
+
+				fileWriter.onerror = function(e) {
+					console.log('Write failed: ' + e.toString());
+				};
+
+				var lines = [];
+				$('#slide-bar div').each(function(idx, div) {
+					var line = $(div).text();
+					lines.push(line);
+					lines.push('\r\n');
+				});
+
+debugger;
+				fileWriter.truncate(0);
+				fileWriter.write(new Blob(lines, {type: 'text/plain;charset=GBK'}));
+//				fileWriter.write(new Blob(['中'], {type: 'text/plain;charset=GBK'}));
+			});
+		});
+	});
+
 	// 鼠标点击时切换“播放/暂停”
 	$('#slide-view').on('click', function() {
-		var video = $('#player').get(0);
-		video.paused ? video.play() : video.pause();
+		player.paused ? player.play() : player.pause();
 	});
 
 	// 播放进度
-	$('#player').on('timeupdate', function() {
+	$(player).on('timeupdate', function() {
 		// 实时显示播放进度
 		var str = formatTime(this.currentTime) + ' / ' + formatTime(this.duration);
 		$('#hud').text(str).show();
@@ -59,26 +95,25 @@ function onReady()
 
 	// 键盘控制
 	$(document).on('keydown', function(evt) {
-		var video = $('#player').get(0);
 		if (evt.keyCode == 40) { // 下箭头
 			markNextLine();
 			evt.preventDefault();
 		} else if (evt.keyCode == 38) { // 上箭头
 			// 切换“播放/暂停”
-			if (video.readyState > 0) {
-				video.paused ? video.play() : video.pause();
+			if (player.readyState > 0) {
+				player.paused ? player.play() : player.pause();
 			}
 			evt.preventDefault();
 		} else if (evt.keyCode == 37) { // 左箭头
 			// 回退
-			if (video.readyState > 0) {
-				$('#player').get(0).currentTime -= 3;
+			if (player.readyState > 0) {
+				player.currentTime -= 3;
 			}
 			evt.preventDefault();
 		} else if (evt.keyCode == 39) { // 右箭头
 			// 快进
-			if (video.readyState > 0) {
-				$('#player').get(0).currentTime += 3;
+			if (player.readyState > 0) {
+				player.currentTime += 3;
 			}
 			evt.preventDefault();
 		}
@@ -146,7 +181,7 @@ function slideToTime(currentTime)
 
 function markNextLine()
 {
-	var currentTime = $('#player').get(0).currentTime;
+	var currentTime = player.currentTime;
 
 	// 找到“下一行”
 	var curLine = $('#slide-bar div.current-line');
