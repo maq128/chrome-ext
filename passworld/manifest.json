@@ -1,0 +1,29 @@
+{
+	"name"              : "密码保管箱",
+	"version"           : "0.1",
+	"manifest_version"  : 2,
+	"description"       : "统一管理各网站的注册账号和密码。",
+
+	"permissions": [
+		"tabs"
+	],
+
+	"icons": {
+		"16" : "icon16.png",
+		"48" : "icon48.png",
+		"128": "icon128.png"
+	},
+
+	"background": {
+		"persistent": false,
+		"scripts": [ "background.js" ]
+	},
+
+	"browser_action": {
+		"default_icon": {
+			"19": "icon48.png",
+			"38": "icon48.png"
+		},
+		"default_title": "密码保管箱"
+	}
+}
