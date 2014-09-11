@@ -12,7 +12,7 @@ chrome.browserAction.onClicked.addListener( function( tab ) {
 		} else {
 			// 创建新窗口
 			chrome.windows.getCurrent({}, function(window) {
-				var width = 300;
+				var width = 400;
 				var height = 500;
 				var left = window.left + window.width - width;
 				var top = window.top + Math.floor((window.height - height) / 2);

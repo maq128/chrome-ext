@@ -6,10 +6,101 @@
 <style type="text/css">
 body {
 	margin: 0px;
-	background: #4E5359;
-	color: white;
+	background-color: #EFF3F7;
+	color: black;
 	font-size: 14px;
 	font-family: '微软雅黑';
+	overflow-x: hidden;
+	overflow-y: scroll;
+	cursor: default;
+}
+
+#mainframe {
+	padding: 0.5em;
+	min-width: 300px;
+}
+
+#search {
+	background-color: #fff;
+	border: 1px solid #989CA1;
+	height: 20px;
+	width: 100%;
+	border-radius: 15px;
+	box-shadow: 0px 1px 0px #FFF;
+}
+
+#search-icon {
+	display: block;
+	float: left;
+	height: 19px;
+	width: 28px;
+	background: url(icons.png) no-repeat 0px 0px;
+}
+
+#search-input {
+	float: left;
+	font: 13px/20px Arial;
+	border: none;
+	height: 92%;
+	width: 78%;
+	outline: none;
+	padding: 1px 0px;
+}
+
+#search-clean {
+	display: block;
+	float: right;
+	margin-right: 5px;
+	width: 20px;
+	height: 19px;
+	background: url(icons.png) no-repeat -29px 0px;
+	cursor: pointer;
+}
+
+.card {
+	margin: 0.5em 0;
+	border: 1px solid silver;
+	border-radius: 0.5em;
+	padding: 0.5em;
+	box-shadow: 0.2em 0.2em 0.1em #D5D5D5;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#f0f0f0));
+	color: #030303;
+}
+
+.card > div.block {
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.card .title {
+	float: left;
+	width: 6em;
+	overflow-x: hidden;
+	min-height: 6em;
+	text-align: center;
+	font-weight: bold;
+	border: 1px solid silver;
+	padding: 0.2em;
+	margin-right: 0.5em;
+}
+
+.card .password-bg {
+	display: inline-block;
+	width: 10em;
+	background-color: black;
+}
+.card .password-bg:hover {
+	background-color: #328efe;
+}
+.card .password {
+	display: inline-block;
+	width: 100%;
+	opacity: 0;
+}
+
+.card .hint {
+	font-size: 0.8em;
+	color: gray;
 }
 </style>
 </head>
@@ -17,7 +108,14 @@ body {
 <body>
 
 <div id="mainframe">
-	<div class="title">列表显示已记录的注册账号/密码</div>
+	<div id="search">
+		<span id="search-icon"></span>
+		<span id="search-clean" style="-display: none;"></span>
+		<input id="search-input" type="text" value="" placeholder="查找" />
+	</div>
+	<div id="matched" class="list"></div>
+	<hr>
+	<div id="others" class="list"></div>
 </div>
 <script src="jquery-1.11.1.js"></script>
 <script src="list.js"></script>
