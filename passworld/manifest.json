@@ -1,8 +1,8 @@
 {
-	"name"              : "密码保管箱",
+	"name"              : "密世界",
 	"version"           : "0.1",
 	"manifest_version"  : 2,
-	"description"       : "统一管理各网站的注册账号和密码。",
+	"description"       : "一个密码保管箱，统一管理您在各网站的注册账号和密码。",
 
 	"permissions": [
 		"tabs"
@@ -24,6 +24,6 @@
 			"19": "icon48.png",
 			"38": "icon48.png"
 		},
-		"default_title": "密码保管箱"
+		"default_title": "密世界"
 	}
 }
