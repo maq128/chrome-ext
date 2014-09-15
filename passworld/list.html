@@ -57,7 +57,16 @@ body {
 	cursor: pointer;
 }
 
+hr.separator {
+	height: 6px;
+	background-color: silver;
+	border: 1px solid gray;
+	border-radius: 3px;
+	box-shadow: 0.2em 0.2em 0.1em #D5D5D5;
+}
+
 .card {
+	position: relative;
 	margin: 0.5em 0;
 	border: 1px solid silver;
 	border-radius: 0.5em;
@@ -67,12 +76,59 @@ body {
 	color: #030303;
 }
 
-.card > div.block {
+.card .handle {
+	position: absolute;
+	right: 0.5em;
+	top: 0.5em;
+	font-family: Webdings;
+	cursor: pointer;
+}
+.card .handle:hover {
+	color: brown;
+}
+
+#matched .card .collapsed,
+#others .card .expanded
+{
+	display: none;
+}
+
+#matched .card .expanded,
+#others .card .collapsed
+{
+	display: block;
+}
+
+#matched .card.toggle .expanded,
+#others .card.toggle .collapsed
+{
+	display: none;
+}
+
+#matched .card.toggle .collapsed,
+#others .card.toggle .expanded
+{
+	display: block;
+}
+
+.card .collapsed .title {
+	font-weight: bold;
+}
+
+.card .collapsed .siteurl {
+	color: blue;
+	text-decoration: none;
+}
+.card .collapsed .siteurl:hover {
+	text-decoration: underline;
+}
+
+.card .expanded div.block {
 	margin-bottom: 0.3em;
 	white-space: nowrap;
 }
 
-.card .title {
+.card .expanded .title {
 	float: left;
 	width: 6em;
 	overflow-x: hidden;
@@ -84,29 +140,29 @@ body {
 	margin-right: 0.5em;
 }
 
-.card .siteurl {
+.card .expanded .siteurl {
 	color: blue;
 	text-decoration: none;
 }
-.card .siteurl:hover {
+.card .expanded .siteurl:hover {
 	text-decoration: underline;
 }
 
-.card .password-bg {
+.card .expanded .password-bg {
 	display: inline-block;
 	width: 10em;
 	background-color: black;
 }
-.card .password-bg:hover {
+.card .expanded .password-bg:hover {
 	background-color: #328efe;
 }
-.card .password {
+.card .expanded .password {
 	display: inline-block;
 	width: 100%;
 	opacity: 0;
 }
 
-.card .hint {
+.card .expanded .hint {
 	font-size: 0.8em;
 	color: gray;
 }
@@ -122,7 +178,7 @@ body {
 		<input id="search-input" type="text" value="" placeholder="查找" />
 	</div>
 	<div id="matched" class="list"></div>
-	<hr>
+	<hr class="separator">
 	<div id="others" class="list"></div>
 </div>
 <script src="jquery-1.11.1.js"></script>
