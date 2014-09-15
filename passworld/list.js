@@ -1,4 +1,5 @@
 // http://api.jquery.com/
+// https://github.com/websanova/js-url
 
 $(function() {
 	$(window).on('resize', onResizeWindow);
@@ -77,6 +78,8 @@ function populateRecords(records)
 	var matched = $('#matched');
 	var others = $('#others');
 	$.each(records, function(idx, rec) {
+		rec.domain = $.url('domain', rec.siteurl);
+
 		var html = [
 			'<div class="card">',
 				'<div class="title"></div>',

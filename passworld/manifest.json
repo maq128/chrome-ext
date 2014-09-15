@@ -2,7 +2,7 @@
 	"name"              : "密世界",
 	"version"           : "0.1",
 	"manifest_version"  : 2,
-	"description"       : "一个密码保管箱，统一管理您在各网站的注册账号和密码。",
+	"description"       : "个人密码保管箱，统一管理您在各网站的注册账号和密码。",
 
 	"permissions": [
 		"tabs"
