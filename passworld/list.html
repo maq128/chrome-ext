@@ -20,49 +20,55 @@ body {
 	min-width: 300px;
 }
 
+#toolbar {
+	position: relative;
+}
+
 #search {
+	display: inline-block;
+	line-height: 0px;
 	background-color: #fff;
 	border: 1px solid #989CA1;
-	height: 20px;
-	width: 100%;
-	border-radius: 15px;
+	border-radius: 10px;
 	box-shadow: 0px 1px 0px #FFF;
 }
 
 #search-icon {
-	display: block;
-	float: left;
-	height: 19px;
-	width: 28px;
+	display: inline-block;
 	background: url(icons.png) no-repeat 0px 0px;
+	width: 28px;
+	height: 19px;
 }
 
 #search-input {
-	float: left;
 	font: 13px/20px Arial;
 	border: none;
-	height: 92%;
-	width: 78%;
+	width: 100px;
+	height: 18px;
+	line-height: 15px;
 	outline: none;
-	padding: 1px 0px;
+	padding: 0px;
+	vertical-align: top;
 }
 
 #search-clean {
-	display: block;
-	float: right;
-	margin-right: 5px;
-	width: 20px;
-	height: 19px;
+	display: inline-block;
 	background: url(icons.png) no-repeat -29px 0px;
+	width: 21px;
+	height: 19px;
 	cursor: pointer;
 }
 
-hr.separator {
-	height: 6px;
-	background-color: silver;
-	border: 1px solid gray;
-	border-radius: 3px;
-	box-shadow: 0.2em 0.2em 0.1em #D5D5D5;
+#btn-add-rec {
+	float: right;
+	height: 19px;
+	line-height: 19px;
+	vertical-align: top;
+	margin-right: 0.5em;
+	cursor: pointer;
+}
+#btn-add-rec:hover {
+	color: brown;
 }
 
 .card {
@@ -76,93 +82,57 @@ hr.separator {
 	color: #030303;
 }
 
-.card .handle {
-	position: absolute;
-	right: 0.5em;
-	top: 0.5em;
-	font-family: Webdings;
+.card .title {
+	overflow: hidden;
+	font-size: 1em;
+	line-height: 1.5em;
+	text-indent: 2em;
+	font-weight: bold;
 	cursor: pointer;
 }
-.card .handle:hover {
+.card .title:hover {
 	color: brown;
 }
 
-#matched .card .collapsed,
-#others .card .expanded
-{
+.card .detail {
 	display: none;
+	border-top: 1px solid silver;
+	padding-left: 0.5em;
+	padding-top: 0.2em;
 }
-
-#matched .card .expanded,
-#others .card .collapsed
-{
+.card.expanded .detail {
 	display: block;
 }
 
-#matched .card.toggle .expanded,
-#others .card.toggle .collapsed
-{
-	display: none;
-}
-
-#matched .card.toggle .collapsed,
-#others .card.toggle .expanded
-{
-	display: block;
-}
-
-.card .collapsed .title {
-	font-weight: bold;
-}
-
-.card .collapsed .siteurl {
-	color: blue;
-	text-decoration: none;
-}
-.card .collapsed .siteurl:hover {
-	text-decoration: underline;
-}
-
-.card .expanded div.block {
+.card div.block {
 	margin-bottom: 0.3em;
 	white-space: nowrap;
+	overflow: hidden;
 }
 
-.card .expanded .title {
-	float: left;
-	width: 6em;
-	overflow-x: hidden;
-	min-height: 6em;
-	text-align: center;
-	font-weight: bold;
-	border: 1px solid silver;
-	padding: 0.2em;
-	margin-right: 0.5em;
-}
-
-.card .expanded .siteurl {
+.card .siteurl {
 	color: blue;
 	text-decoration: none;
 }
-.card .expanded .siteurl:hover {
+.card .siteurl:hover {
 	text-decoration: underline;
 }
 
-.card .expanded .password-bg {
+.card .password-bg {
 	display: inline-block;
 	width: 10em;
 	background-color: black;
 }
-.card .expanded .password-bg:hover {
+.card .password-bg:hover {
 	background-color: #328efe;
 }
-.card .expanded .password {
+.card .password {
 	display: inline-block;
 	width: 100%;
 	opacity: 0;
 }
 
-.card .expanded .hint {
+.card .hint {
 	font-size: 0.8em;
 	color: gray;
 }
@@ -172,14 +142,15 @@ hr.separator {
 <body>
 
 <div id="mainframe">
-	<div id="search">
-		<span id="search-icon"></span>
-		<span id="search-clean" style="-display: none;"></span>
-		<input id="search-input" type="text" value="" placeholder="查找" />
+	<div id="toolbar">
+		<div id="search">
+			<span id="search-icon"></span>
+			<input id="search-input" type="text" value="" placeholder="查找" />
+			<span id="search-clean"></span>
+		</div>
+		<div id="btn-add-rec">+添加</div>
 	</div>
-	<div id="matched" class="list"></div>
-	<hr class="separator">
-	<div id="others" class="list"></div>
+	<div id="list"></div>
 </div>
 <script src="jquery-1.11.1.js"></script>
 <script src="url.js"></script>

@@ -8,7 +8,7 @@ $(function() {
 	Cards.populate(loadRecords());
 
 	// 鼠标进入账号/密码文字区域后，选中文字准备拖拽
-	$('.list').delegate('.username, .password', 'mouseenter', function(evt) {
+	$('#list').delegate('.username, .password', 'mouseenter', function(evt) {
 		$('#search-input').get(0).blur();
 
 		var range = document.createRange();
@@ -17,13 +17,14 @@ $(function() {
 		sel.removeAllRanges();
 		sel.addRange(range);
 	});
-	$('.list').delegate('.username, .password', 'mouseleave', function(evt) {
+	$('#list').delegate('.username, .password', 'mouseleave', function(evt) {
 		var sel = window.getSelection();
 		sel.removeAllRanges();
 	});
 
-	$('.list').delegate('.handle', 'click', function(evt) {
-		$(evt.target).parent('.card').toggleClass('toggle');
+	$('#list').delegate('.title', 'click', function(evt) {
+		var detail = $(evt.target).parent('.card').find('.detail');
+		detail[detail.is(':visible') ? 'hide' : 'show'](100);
 	});
 
 	// 输入查找
@@ -76,13 +77,17 @@ function loadRecords()
 		siteurl: 'http://www.sina.com.cn/',
 		username: 'username_sina',
 		password: 'password_sina',
-		hint: 'hint_sina'
+		hint: ''
 	}, {
 		title: '京东',
 		siteurl: 'http://www.jd.com',
 		username: 'username_jd',
 		password: 'password_jd',
 		hint: 'hint_jd'
+	}, {
+		title: '其它',
+		username: 'username_other',
+		password: 'password_other'
 	}];
 }
 
@@ -92,31 +97,28 @@ var Cards = {
 
 Cards.populate = function(records) {
 	var me = this;
-	var matched = $('#matched').empty();
-	var others = $('#others').empty();
+	var list = $('#list').empty();
 	me.records = [];
 	$.each(records, function(idx, rec) {
 		rec = $.extend({}, rec);
 		var html = [
 			'<div class="card">',
-				'<div class="collapsed">',
-					'<span class="title"></span>',
-					'&nbsp;<a class="siteurl" target="_blank"></a>',
-				'</div>',
-				'<div class="expanded">',
-					'<div class="title"></div>',
+				'<div class="title"></div>',
+				'<div class="detail">',
 					'<div class="block">网站：<a class="siteurl" target="_blank"></a></div>',
 					'<div class="block">账号：<span class="username" title="可以用鼠标拖拽复制"></span></div>',
 					'<div class="block">密码：<span class="password-bg"><span class="password" title="可以用鼠标拖拽复制"></span></span></div>',
 					'<div class="hint"></div>',
-					'<div style="clear:both;"></div>',
 				'</div>',
-				'<div class="handle">&#49;</div>',
 			'</div>'
 		];
-		var card = $(html.join('')).appendTo(others);
+		var card = $(html.join('')).appendTo(list);
 		card.find('.title').text(rec.title);
-		card.find('.siteurl').text(rec.siteurl).attr('href', rec.siteurl);
+		if (!rec.siteurl) {
+			card.find('.siteurl').parent('.block').hide();
+		} else {
+			card.find('.siteurl').text(rec.siteurl).attr('href', rec.siteurl);
+		}
 		card.find('.username').text(rec.username);
 		card.find('.password').text(rec.password);
 		card.find('.hint').text(rec.hint);
@@ -129,15 +131,13 @@ Cards.populate = function(records) {
 
 Cards.filter = function(keyword) {
 	var me = this;
-	var matched = $('#matched').empty();
-	var others = $('#others').empty();
+	var list = $('#list');
 	$.each(me.records, function(idx, rec) {
-		var is = keyword.length > 0 && rec.hostname.indexOf(keyword) >= 0;
-		if (is) {
-			rec.card.appendTo(matched).removeClass('toggle');
-		} else {
-			rec.card.appendTo(others);
-		}
+		var is = keyword.length == 0;
+		is |= rec.hostname.indexOf(keyword) >= 0;
+		is |= rec.title.indexOf(keyword) >= 0;
+		is |= (rec.hint || '').indexOf(keyword) >= 0;
+		rec.card[is ? 'show' : 'hide']();
 	});
 };
 
