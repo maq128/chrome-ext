@@ -24,5 +24,10 @@
         "run_at"     : "document_end",
         "js"         : [ "inject.js" ],
         "all_frames" : true
+    }, {
+        "matches"    : [ "*://*.google.com/*" ],
+        "run_at"     : "document_end",
+        "js"         : [ "google.js" ],
+        "all_frames" : true
     }]
 }
