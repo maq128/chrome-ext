@@ -1,0 +1,58 @@
+{
+	"name"              : "抢标助手",
+	"version"           : "0.3",
+	"manifest_version"  : 2,
+	"description"       : "用于在网贷网站上快速抢标。",
+
+	"icons": {
+		"16" : "icon16.png",
+		"48" : "icon48.png",
+		"128": "icon128.png"
+	},
+
+	"browser_action": {
+		"default_icon": {
+			"19": "icon48.png",
+			"38": "icon48.png"
+		},
+		"default_title": "抢标助手",
+		"default_popup": "popup.html"
+	},
+
+	"permissions": [
+		"tabs",
+		"notifications"
+	],
+
+	"background": {
+		"scripts": [ "background.js" ]
+	},
+
+	"content_scripts": [{
+		"matches"    : [ "http://list.lufax.com/list/listing" ],
+		"run_at"     : "document_end",
+		"js"         : [ "lufax_content.js" ],
+		"all_frames" : false
+	}, {
+		"matches"    : [ "https://trading.lufax.com/trading/trade-info*" ],
+		"run_at"     : "document_start",
+		"js"         : [ "lufax_content_info.js" ],
+		"all_frames" : false
+	}, {
+		"matches"    : [ "https://trading.lufax.com/trading/security-valid*" ],
+		"run_at"     : "document_end",
+		"js"         : [ "lufax_content_valid.js" ],
+		"all_frames" : false
+	}],
+
+	"web_accessible_resources": [
+		"icon48.png",
+		"voice.wav",
+		"lufax_page.js",
+		"lufax_alarm.wav"
+	],
+
+	"externally_connectable": {
+		"matches": ["*://list.lufax.com/*"]
+	}
+}
