@@ -1,6 +1,8 @@
 // http://developer.chrome.com/extensions/devguide.html
 
 (function() {
+	var protocol = document.location.protocol;
+
 	// 鼠标右键拖拽网页
 	var dragWithRightButton = function() {
 		var drag = {
@@ -94,7 +96,7 @@
 				var css = document.createElement('link');
 				css.rel = 'stylesheet';
 				css.type = 'text/css';
-				css.href = 'http://open.iciba.com/huaci/mini.css';
+				css.href = protocol + '//open.iciba.com/huaci/mini.css';
 				document.body.appendChild(css);
 
 				icibaDiv = document.createElement('div');
@@ -130,7 +132,7 @@
 
 			// 发送查询请求
 			var sc = document.createElement('script');
-			sc.src = 'http://open.iciba.com/huaci/dict.php?word=' + encodeURIComponent(word) + '&t=' + new Date().getTime();
+			sc.src = protocol + '//open.iciba.com/huaci/dict.php?word=' + encodeURIComponent(word) + '&t=' + new Date().getTime();
 			document.body.appendChild(sc);
 		};
 
