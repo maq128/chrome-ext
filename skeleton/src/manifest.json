@@ -1,0 +1,43 @@
+{
+	"name"              : "Chrome Extension Skeleton",
+	"version"           : "0.1",
+	"manifest_version"  : 2,
+	"description"       : "Chrome Extension Skeleton",
+
+	"icons": {
+		"16" : "icons/icon16.png",
+		"32" : "icons/icon32.png",
+		"48" : "icons/icon48.png",
+		"128": "icons/icon128.png"
+	},
+
+	"permissions": [
+		"activeTab",
+		"tabs",
+		"downloads"
+	],
+
+	"background": {
+		"scripts": [ "js/background.js" ]
+	},
+
+	"content_scripts": [{
+		"matches"    : [ "*://*/*", "file:///*" ],
+		"run_at"     : "document_end",
+		"js"         : [ "js/content.js" ],
+		"all_frames" : false
+	}],
+
+	"web_accessible_resources": [
+		"js/page.js"
+	],
+
+	"browser_action": {
+		"default_icon": {
+			"16": "icons/icon16.png",
+			"32": "icons/icon32.png"
+		},
+		"default_title": "Skeleton",
+		"default_popup": "popup/popup.html"
+	}
+}
