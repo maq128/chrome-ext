@@ -1,9 +1,7 @@
 function click(evt) {
 	window.close();
-	var urls = (evt.target.getAttribute('open-pages') || '').split(',');
-	for (var i = 0; i < urls.length; i++) {
-		chrome.tabs.create({ url: urls[i] }, function( tab ) { });
-	}
+	var url = evt.target.getAttribute('data-url');
+	chrome.tabs.create({url: url}, function(tab) {});
 }
 
 document.addEventListener('DOMContentLoaded', function () {

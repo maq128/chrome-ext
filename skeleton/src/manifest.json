@@ -39,5 +39,9 @@
 		},
 		"default_title": "Skeleton",
 		"default_popup": "popup/popup.html"
+	},
+
+	"externally_connectable": {
+		"matches": ["*://*.bing.com/*", "*://*.baidu.com/*"]
 	}
 }
