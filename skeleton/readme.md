@@ -11,3 +11,7 @@
 [Declare permissions](https://developer.chrome.com/docs/extensions/mv2/declare_permissions/)
 
 [Design the user interface](https://developer.chrome.com/docs/extensions/mv2/user_interface/)
+
+[Message passing](https://developer.chrome.com/docs/extensions/mv3/messaging/)
+
+[Chrome DevTools Protocol - Page.captureScreenshot](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot)

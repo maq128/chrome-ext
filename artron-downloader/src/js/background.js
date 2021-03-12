@@ -1,9 +1,44 @@
-chrome.runtime.onMessageExternal.addListener(function(request, sender, sendResponse) {
-	if (request.p1) {
-		console.log('background.js:', 'request: p1:', request.p1);
-		sendResponse({success:true});
-		return;
-	}
+chrome.runtime.onMessageExternal.addListener(function(message, sender, sendResponse) {
+    if (message.act == 'capture') {
+        console.log('message:', message, sender, sendResponse);
+        var tabId = sender.tab.id;
 
-	sendResponse({success:false});
+        chrome.debugger.attach({tabId:tabId}, '1.0', function() {
+            if (chrome.runtime.lastError) {
+                console.log(chrome.runtime.lastError);
+                return;
+            }
+
+            chrome.debugger.sendCommand(
+                { tabId: tabId },
+                "Page.captureScreenshot",
+                {
+                    format: "png",
+                    quality: 100,
+                    fromSurface: true,
+                },
+                (resp) => {
+                    if (chrome.runtime.lastError) {
+                        console.log(chrome.runtime.lastError);
+                    } else {
+                        // 把截图的结果下载到本地文件
+                        let dataurl = "data:image/jpg;base64," + resp.data;
+                        chrome.downloads.download({
+                            url: dataurl,
+                            filename: message.id + '.png'
+                        });
+                    }
+
+                    chrome.debugger.detach({tabId:tabId});
+                }
+            );
+        });
+    }
+
+    // 测试
+    if (message.act == 'test') {
+        var tabId = sender.tab.id;
+        chrome.tabs.sendMessage(tabId, {act: 'test'});
+        return;
+    }
 });

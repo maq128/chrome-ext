@@ -7,3 +7,7 @@ chrome.runtime.onMessageExternal.addListener(function(request, sender, sendRespo
 
 	sendResponse({success:false});
 });
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    console.log('chrome.tabs.onUpdated:', tabId, tab.url, tab.status);
+});
